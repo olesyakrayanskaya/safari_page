@@ -1,0 +1,81 @@
+.about-tures {
+    padding: 113px 0 102px;
+
+    @media (max-width: 900px) {
+        padding: 40px 0 35px;
+    }
+}
+
+.about-tures__inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    @media (max-width: 1150px) {
+        justify-content: center;
+    }
+}
+
+.about-tures__text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    padding-right: 30px;
+
+    @media (max-width: 1150px) {
+        padding-right: 0;            
+    }  
+}
+
+.about-tures__title {
+    @include h2-text;
+    margin-bottom: 25px;
+
+    @media (max-width: 900px) {
+        font-size: 28px;
+    }
+}
+
+.about-tures__article {
+    @include body-text;
+    max-width: 448px;
+
+    @media (max-width: 1150px) {
+        width: 100%;
+        max-width: none;
+    }
+
+    @media (max-width: 900px) {
+        font-size: 16px;
+    }
+}
+
+.about-tures__link {
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    text-decoration: underline;
+    color: $grey;
+    margin-top: 34px;
+}
+
+.about-tures__video {
+
+    &[poster] {
+        object-fit: cover;
+    }
+
+    @media (max-width: 1150px) {
+        width: 100%;
+        margin-top: 40px;
+    }
+
+    @media (max-width: 500px) {
+        height: 300px;
+        margin-top: 20px;
+    }
+}
