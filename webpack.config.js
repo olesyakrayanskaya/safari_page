@@ -1,9 +1,11 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
-const FileManagerPlugin = require('filemanager-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const ghpages = require('gh-pages');
+
+ghpages.publish('dist', function (err) { });
 
 module.exports = {
     entry: path.resolve(__dirname, 'src', 'index.js'),
