@@ -1,76 +1,73 @@
-const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const ghpages = require('gh-pages');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
-
-ghpages.publish('dist', function (err) { });
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 module.exports = {
-
-    context: path.resolve(__dirname, 'src'),
-    entry: './index.js',
-    mode: 'development',
-    devtool: 'inline-source-map',
-    devServer: {
-        port: 8080
-    },
-    watch: true,
+    entry: path.resolve(__dirname, 'src', 'index.js'),
     output: {
-        filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
-        clean: true,
+        filename: 'index.[contenthash].js',
+        assetModuleFilename: path.join('[name].[contenthash][ext]'),
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            title: 'Title',
-            template: '../src/index.html',
-            filename: 'index.html'
-        }),
-        new CleanWebpackPlugin(),
-        new FaviconsWebpackPlugin('./assets/logo_icon.svg'),
-    ],
-
     module: {
         rules: [
             {
-                test: /\.m?js$/,
-                exclude: /(node_modules|bower_components)/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
-                }
+                test: /\.html$/i,
+                loader: 'html-loader',
             },
             {
-                test: /\.css$/i,
-                use: ['style-loader', 'css-loader'],
+                test: /\.js$/,
+                use: ['babel-loader'],
+                exclude: /node_modules/,
             },
             {
-                test: /\.s[ac]ss$/i,
-                use: [
-                    "style-loader",
-                    "css-loader",
-                    "sass-loader",
-                ],
+                test: /\.(scss|css)$/,
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 type: 'asset/resource',
             },
             {
-                test: /\.(woff|woff2|eot|ttf|otf)$/i,
+                test: /\.(woff2?|eot|ttf|otf)$/i,
                 type: 'asset/resource',
             },
+        ],
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, 'src', 'template.html'),
+            filename: 'index.html',
+        }),
+        new CleanWebpackPlugin(),
+        new MiniCssExtractPlugin(
             {
-                test: /\.(csv|tsv)$/i,
-                use: ['csv-loader'],
-            },
-            {
-                test: /\.xml$/i,
-                use: ['xml-loader'],
-            },
+                filename: '[name].[contenthash].css',
+            }
+        ),
+    ],
+    devServer: {
+        watchFiles: path.resolve(__dirname, 'src'),
+        port: 9000,
+    },
+    optimization: {
+        minimizer: [
+            new ImageMinimizerPlugin({
+                minimizer: {
+                    implementation: ImageMinimizerPlugin.imageminMinify,
+                    options: {
+                        plugins: [
+                            ['gifsicle', { interlaced: true }],
+                            ['jpegtran', { progressive: true }],
+                            ['optipng', { optimizationLevel: 5 }],
+                            ['svgo', { name: 'preset-default' }],
+                        ],
+                    },
+                },
+            }),
         ],
     },
 };
